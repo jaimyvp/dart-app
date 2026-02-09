@@ -32,6 +32,10 @@
 
     <main>
       <section id="screenStart" class="screen">
+        <div class="screen-header">
+          <div>
+            <h2>Hoofdmenu</h2>
+            <p>Kies een gamemode om regels in te stellen en te starten.</p>
       <section class="screen">
         <div class="screen-header">
           <div>
@@ -41,6 +45,52 @@
           <div class="status-pill">Semi-automatische scoreherkenning</div>
         </div>
 
+        <div class="menu-grid" id="menuGrid" role="list">
+          <button class="menu-button" type="button" data-key="around-the-clock" role="listitem">
+            <div>
+              <h3>Around the Clock</h3>
+              <p>Werk van 1 naar 20 of speel vrijuit, met optionele bull finish.</p>
+            </div>
+            <div class="card-footer" style="color: #f4b740;">
+              <span>Instellen</span>
+              <span>•</span>
+              <span>Start</span>
+            </div>
+          </button>
+          <button class="menu-button" type="button" data-key="501" role="listitem">
+            <div>
+              <h3>501</h3>
+              <p>Klassieke leg-based 501 met instelbare in/out en bots.</p>
+            </div>
+            <div class="card-footer" style="color: #4ac7f5;">
+              <span>Instellen</span>
+              <span>•</span>
+              <span>Start</span>
+            </div>
+          </button>
+          <button class="menu-button" type="button" data-key="singles-training" role="listitem">
+            <div>
+              <h3>Singles Training</h3>
+              <p>Focus op enkelvoudige segmenten met tempo en accuracy.</p>
+            </div>
+            <div class="card-footer" style="color: #8b6dff;">
+              <span>Instellen</span>
+              <span>•</span>
+              <span>Start</span>
+            </div>
+          </button>
+          <button class="menu-button" type="button" data-key="doubles-training" role="listitem">
+            <div>
+              <h3>Doubles Training</h3>
+              <p>Gericht oefenen op dubbels met spelmodi.</p>
+            </div>
+            <div class="card-footer" style="color: #58d68d;">
+              <span>Instellen</span>
+              <span>•</span>
+              <span>Start</span>
+            </div>
+          </button>
+        </div>
         <div class="game-grid" id="gameGrid" role="list"></div>
       </section>
 
@@ -149,6 +199,12 @@
             </p>
           </div>
         </form>
+        <div class="config-actions">
+          <button id="configStartGame" type="button" class="primary">
+            Start spel
+          </button>
+          <button id="configBack" type="button" class="secondary">Terug</button>
+        </div>
       </section>
 
       <section id="screenPlay" class="screen hidden" aria-live="polite">

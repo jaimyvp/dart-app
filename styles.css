@@ -134,10 +134,63 @@ main {
   font-size: 0.85rem;
 }
 
+.menu-grid {
 .game-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 18px;
+}
+
+.menu-button {
+.game-card {
+  border-radius: 18px;
+  padding: 18px;
+  background: #111827;
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  display: grid;
+  gap: 10px;
+  min-height: 168px;
+  cursor: pointer;
+  text-align: left;
+  transition: transform 0.2s ease, border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.menu-button:hover {
+  transition: transform 0.2s ease, border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.game-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(148, 163, 184, 0.4);
+}
+
+.menu-button.selected {
+.game-card.selected {
+  border-color: rgba(74, 199, 245, 0.8);
+  box-shadow: 0 16px 30px rgba(74, 199, 245, 0.15);
+}
+
+.menu-button h3 {
+.game-card h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.menu-button p {
+.game-card p {
+  margin: 0;
+  color: #cbd5e1;
+  font-size: 0.92rem;
+}
+
+.menu-button .card-footer {
+.card-footer {
+  margin-top: auto;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  color: #8aa3ff;
+  font-size: 0.8rem;
 }
 
 .game-card {
@@ -182,6 +235,8 @@ main {
   font-size: 0.8rem;
 }
 
+.panel {
+  background: rgba(15, 22, 36, 0.9);
 .panel {
   background: rgba(15, 22, 36, 0.9);
 header button {
@@ -265,6 +320,14 @@ canvas {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 18px;
+}
+
+.config-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
 }
 
 .form-card {

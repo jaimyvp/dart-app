@@ -1,3 +1,4 @@
+const menuButtons = document.querySelectorAll(".menu-button");
 const gameGrid = document.getElementById("gameGrid");
 const panelTitle = document.getElementById("panelTitle");
 const panelContent = document.getElementById("panelContent");
@@ -12,6 +13,8 @@ const configGameMode = document.getElementById("configGameMode");
 const configForm = document.getElementById("configForm");
 const configBotLevel = document.getElementById("configBotLevel");
 const configCameraFlow = document.getElementById("configCameraFlow");
+const configStartGame = document.getElementById("configStartGame");
+const configBack = document.getElementById("configBack");
 const playerScore = document.getElementById("playerScore");
 const playerLegs = document.getElementById("playerLegs");
 const botScore = document.getElementById("botScore");
@@ -151,6 +154,15 @@ const state = {
   },
   cameraStream: null,
 };
+
+function bindMenuButtons() {
+  menuButtons.forEach((button) => {
+    const gameKey = button.dataset.key;
+    button.addEventListener("click", () => {
+      const game = games.find((item) => item.key === gameKey);
+      if (!game) {
+        return;
+      }
 let selectedKey = null;
 
 function renderCards() {
@@ -178,6 +190,8 @@ function renderCards() {
       updatePanel(game);
       updateSelection();
       syncConfigDefaults();
+      showScreen("config");
+    });
       selectedKey = game.key;
       updatePanel(game);
       updateSelection();
@@ -188,6 +202,9 @@ function renderCards() {
 }
 
 function updateSelection() {
+  document.querySelectorAll(".menu-button").forEach((button) => {
+    const isSelected = button.dataset.key === state.selectedKey;
+    button.classList.toggle("selected", isSelected);
   document.querySelectorAll(".game-card").forEach((card) => {
     const isSelected = card.dataset.key === state.selectedKey;
     card.classList.toggle("selected", isSelected);
@@ -523,6 +540,11 @@ navPlay.addEventListener("click", () => {
   showScreen("play");
   resetGame();
 });
+configBack.addEventListener("click", () => showScreen("start"));
+configStartGame.addEventListener("click", () => {
+  showScreen("play");
+  resetGame();
+});
 
 configForm.addEventListener("change", updateConfigFromForm);
 configForm.addEventListener("input", updateConfigFromForm);
@@ -543,6 +565,7 @@ openCalibration.addEventListener("click", openCalibrationModal);
 closeCalibration.addEventListener("click", closeCalibrationModal);
 saveCalibration.addEventListener("click", saveCalibrationValues);
 
+bindMenuButtons();
 renderCards();
 updatePanel(null);
 updateSelection();
