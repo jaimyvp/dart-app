@@ -1,3 +1,8 @@
+const gameGrid = document.getElementById("gameGrid");
+const panelTitle = document.getElementById("panelTitle");
+const panelContent = document.getElementById("panelContent");
+const resetViewButton = document.getElementById("resetView");
+const startGameButton = document.getElementById("startGame");
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 const panelTitle = document.getElementById("panelTitle");
@@ -66,6 +71,45 @@ const games = [
   },
 ];
 
+let selectedKey = null;
+
+function renderCards() {
+  gameGrid.innerHTML = "";
+  games.forEach((game) => {
+    const card = document.createElement("article");
+    card.className = "game-card";
+    card.setAttribute("role", "listitem");
+    card.dataset.key = game.key;
+
+    card.innerHTML = `
+      <div>
+        <h3>${game.title}</h3>
+        <p>${game.description}</p>
+      </div>
+      <div class="card-footer" style="color: ${game.accent};">
+        <span>Instellingen</span>
+        <span>•</span>
+        <span>Startscherm</span>
+      </div>
+    `;
+
+    card.addEventListener("click", () => {
+      selectedKey = game.key;
+      updatePanel(game);
+      updateSelection();
+    });
+
+    gameGrid.appendChild(card);
+  });
+}
+
+function updateSelection() {
+  document.querySelectorAll(".game-card").forEach((card) => {
+    const isSelected = card.dataset.key === selectedKey;
+    card.classList.toggle("selected", isSelected);
+  });
+
+  startGameButton.disabled = !selectedKey;
 const layout = {
   padding: 48,
   cardWidth: 280,
@@ -175,6 +219,7 @@ function updatePanel(game) {
   if (!game) {
     panelTitle.textContent = "Selecteer een spel";
     panelContent.innerHTML =
+      "<p>Kies een spel om de instellingen, modes en scoreflow te zien.</p>";
       "<p>Kies een spel op het canvas om de instellingen en opties te zien.</p>";
     return;
   }
@@ -203,6 +248,14 @@ function updatePanel(game) {
     `
     : "";
 
+  const flowHtml = `
+    <div>
+      <span class="tag">Scoreherkenning</span>
+      <ol>
+        <li>Camera herkent darts of score-input.</li>
+        <li>Speler bevestigt of past de score aan.</li>
+        <li>Score wordt verwerkt in het spel.</li>
+      </ol>
   const scoringHtml = `
     <div>
       <span class="tag">Scoreherkenning</span>
@@ -214,6 +267,30 @@ function updatePanel(game) {
     <p>${game.description}</p>
     ${settingsHtml}
     ${botHtml}
+    ${flowHtml}
+  `;
+}
+
+resetViewButton.addEventListener("click", () => {
+  selectedKey = null;
+  updatePanel(null);
+  updateSelection();
+});
+
+startGameButton.addEventListener("click", () => {
+  if (!selectedKey) {
+    return;
+  }
+
+  panelContent.insertAdjacentHTML(
+    "beforeend",
+    "<p><strong>Volgende stap:</strong> configuratieformulier en score-invoer bouwen.</p>"
+  );
+});
+
+renderCards();
+updatePanel(null);
+updateSelection();
     ${scoringHtml}
   `;
 }
