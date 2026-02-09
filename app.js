@@ -33,6 +33,13 @@ const boardCenterX = document.getElementById("boardCenterX");
 const boardCenterY = document.getElementById("boardCenterY");
 const boardRadius = document.getElementById("boardRadius");
 const saveCalibration = document.getElementById("saveCalibration");
+const resetViewButton = document.getElementById("resetView");
+const startGameButton = document.getElementById("startGame");
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+const panelTitle = document.getElementById("panelTitle");
+const panelContent = document.getElementById("panelContent");
+const resetViewButton = document.getElementById("resetView");
 
 const games = [
   {
@@ -59,6 +66,15 @@ const games = [
       "Win met 2 legs verschil",
       "Sets & legs instelbaar",
       "Bust rule: standaard dartcounter",
+    ],
+    botLevels: [
+      "1: gemiddeld 20–25",
+      "2: gemiddeld 26–30",
+      "3: gemiddeld 31–35",
+      "4: gemiddeld 36–40",
+      "5-10: doorlopend per +5 punten",
+      "11-17: +5 punten per level",
+      "18: gemiddeld 110+",
     ],
   },
   {
@@ -135,6 +151,7 @@ const state = {
   },
   cameraStream: null,
 };
+let selectedKey = null;
 
 function renderCards() {
   gameGrid.innerHTML = "";
@@ -161,6 +178,9 @@ function renderCards() {
       updatePanel(game);
       updateSelection();
       syncConfigDefaults();
+      selectedKey = game.key;
+      updatePanel(game);
+      updateSelection();
     });
 
     gameGrid.appendChild(card);
@@ -175,6 +195,114 @@ function updateSelection() {
 
   navConfig.disabled = !state.selectedKey;
   navPlay.disabled = !state.selectedKey;
+    const isSelected = card.dataset.key === selectedKey;
+    card.classList.toggle("selected", isSelected);
+  });
+
+  startGameButton.disabled = !selectedKey;
+const layout = {
+  padding: 48,
+  cardWidth: 280,
+  cardHeight: 150,
+  gap: 32,
+};
+
+let selectedKey = null;
+
+function drawCanvas() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const title = "Kies je spelmodus";
+  ctx.fillStyle = "#f4f7ff";
+  ctx.font = "700 34px Inter, sans-serif";
+  ctx.fillText(title, layout.padding, 64);
+
+  ctx.fillStyle = "#94a3b8";
+  ctx.font = "16px Inter, sans-serif";
+  ctx.fillText(
+    "Instellingen geïnspireerd op dartcounter + semi-automatische scoreherkenning",
+    layout.padding,
+    96
+  );
+
+  const startX = layout.padding;
+  const startY = 140;
+  games.forEach((game, index) => {
+    const col = index % 2;
+    const row = Math.floor(index / 2);
+    const x = startX + col * (layout.cardWidth + layout.gap);
+    const y = startY + row * (layout.cardHeight + layout.gap);
+
+    game.hitBox = { x, y, width: layout.cardWidth, height: layout.cardHeight };
+
+    const isSelected = game.key === selectedKey;
+    ctx.fillStyle = isSelected ? "rgba(74, 199, 245, 0.15)" : "#111827";
+    ctx.strokeStyle = isSelected ? game.accent : "rgba(148, 163, 184, 0.2)";
+    ctx.lineWidth = 2;
+
+    roundRect(ctx, x, y, layout.cardWidth, layout.cardHeight, 18);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = game.accent;
+    ctx.font = "600 18px Inter, sans-serif";
+    ctx.fillText(game.title, x + 20, y + 40);
+
+    ctx.fillStyle = "#d1d9e6";
+    ctx.font = "14px Inter, sans-serif";
+    wrapText(ctx, game.description, x + 20, y + 70, layout.cardWidth - 40, 18);
+
+    ctx.fillStyle = "rgba(255, 255, 255, 0.15)";
+    ctx.fillRect(x + 20, y + layout.cardHeight - 42, 80, 24);
+    ctx.fillStyle = "#e2e8f0";
+    ctx.font = "12px Inter, sans-serif";
+    ctx.fillText("Instellingen", x + 30, y + layout.cardHeight - 25);
+  });
+
+  ctx.fillStyle = "#0ea5e9";
+  ctx.font = "600 16px Inter, sans-serif";
+  ctx.fillText("Semi-automatische scoreherkenning", layout.padding, 520);
+  ctx.fillStyle = "#94a3b8";
+  ctx.font = "14px Inter, sans-serif";
+  wrapText(
+    ctx,
+    "De app stelt scores voor op basis van camera-analyse, gebruiker bevestigt of past aan.",
+    layout.padding,
+    545,
+    520,
+    18
+  );
+}
+
+function wrapText(context, text, x, y, maxWidth, lineHeight) {
+  const words = text.split(" ");
+  let line = "";
+  words.forEach((word) => {
+    const testLine = `${line}${word} `;
+    const { width } = context.measureText(testLine);
+    if (width > maxWidth && line) {
+      context.fillText(line, x, y);
+      line = `${word} `;
+      y += lineHeight;
+    } else {
+      line = testLine;
+    }
+  });
+  context.fillText(line, x, y);
+}
+
+function roundRect(context, x, y, width, height, radius) {
+  context.beginPath();
+  context.moveTo(x + radius, y);
+  context.lineTo(x + width - radius, y);
+  context.quadraticCurveTo(x + width, y, x + width, y + radius);
+  context.lineTo(x + width, y + height - radius);
+  context.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+  context.lineTo(x + radius, y + height);
+  context.quadraticCurveTo(x, y + height, x, y + height - radius);
+  context.lineTo(x, y + radius);
+  context.quadraticCurveTo(x, y, x + radius, y);
+  context.closePath();
 }
 
 function updatePanel(game) {
@@ -182,6 +310,7 @@ function updatePanel(game) {
     panelTitle.textContent = "Selecteer een spel";
     panelContent.innerHTML =
       "<p>Kies een spel om de instellingen, modes en scoreflow te zien.</p>";
+      "<p>Kies een spel op het canvas om de instellingen en opties te zien.</p>";
     return;
   }
 
@@ -198,6 +327,17 @@ function updatePanel(game) {
     `
     : "";
 
+  const botHtml = game.botLevels
+    ? `
+      <div>
+        <span class="tag">Dartbot levels</span>
+        <ul>
+          ${game.botLevels.map((item) => `<li>${item}</li>`).join("")}
+        </ul>
+      </div>
+    `
+    : "";
+
   const flowHtml = `
     <div>
       <span class="tag">Scoreherkenning</span>
@@ -206,12 +346,17 @@ function updatePanel(game) {
         <li>Speler bevestigt of past de score aan.</li>
         <li>Score wordt verwerkt in het spel.</li>
       </ol>
+  const scoringHtml = `
+    <div>
+      <span class="tag">Scoreherkenning</span>
+      <p>Camera herkent darts, gebruiker bevestigt of past de score aan.</p>
     </div>
   `;
 
   panelContent.innerHTML = `
     <p>${game.description}</p>
     ${settingsHtml}
+    ${botHtml}
     ${flowHtml}
   `;
 }
@@ -404,3 +549,80 @@ updateSelection();
 showScreen("start");
 updateBotVisibility();
 renderScores();
+resetViewButton.addEventListener("click", () => {
+  selectedKey = null;
+  updatePanel(null);
+  updateSelection();
+});
+
+startGameButton.addEventListener("click", () => {
+  if (!selectedKey) {
+    return;
+  }
+
+  panelContent.insertAdjacentHTML(
+    "beforeend",
+    "<p><strong>Volgende stap:</strong> configuratieformulier en score-invoer bouwen.</p>"
+  );
+});
+
+renderCards();
+updatePanel(null);
+updateSelection();
+    ${scoringHtml}
+  `;
+}
+
+function handleCanvasClick(event) {
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  const x = (event.clientX - rect.left) * scaleX;
+  const y = (event.clientY - rect.top) * scaleY;
+
+  const selectedGame = games.find((game) => {
+    const hit = game.hitBox;
+    return (
+      hit &&
+      x >= hit.x &&
+      x <= hit.x + hit.width &&
+      y >= hit.y &&
+      y <= hit.y + hit.height
+    );
+  });
+
+  if (selectedGame) {
+    selectedKey = selectedGame.key;
+    updatePanel(selectedGame);
+    drawCanvas();
+  }
+}
+
+resetViewButton.addEventListener("click", () => {
+  selectedKey = null;
+  updatePanel(null);
+  drawCanvas();
+});
+
+canvas.addEventListener("click", handleCanvasClick);
+
+window.addEventListener("resize", () => {
+  drawCanvas();
+});
+
+updatePanel(null);
+
+function adjustCanvasForHiDpi() {
+  const { width, height } = canvas.getBoundingClientRect();
+  const ratio = window.devicePixelRatio || 1;
+  canvas.width = width * ratio;
+  canvas.height = height * ratio;
+  ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+}
+
+function init() {
+  adjustCanvasForHiDpi();
+  drawCanvas();
+}
+
+init();
