@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dart App Canvas</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div>
+        <h1>Dart App</h1>
+        <p>Beginscherm met spelkeuze en instellingen zoals Dartcounter.</p>
+      </div>
+      <button id="resetView" type="button">Terug naar beginscherm</button>
+    </header>
+
+    <main>
+      <section class="canvas-shell">
+        <canvas id="gameCanvas" width="1200" height="720" aria-label="Dart app canvas"></canvas>
+        <div class="canvas-help">
+          <strong>Tip:</strong> klik op een spelkaart om de instellingen te bekijken.
+        </div>
+      </section>
+
+      <section class="details-panel" aria-live="polite">
+        <h2 id="panelTitle">Selecteer een spel</h2>
+        <div id="panelContent" class="panel-content">
+          <p>Kies een spel op het canvas om de instellingen en opties te zien.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>Concept: semi-automatische scoreherkenning met bevestiging door de gebruiker.</p>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
