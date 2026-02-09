@@ -40,6 +40,24 @@ body {
 }
 
 .app-header p {
+  background: radial-gradient(circle at top, #1a2233, #0b0f17 55%);
+}
+
+header.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 48px 12px;
+  gap: 24px;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2rem;
+  letter-spacing: 0.02em;
+}
+
+header p {
   margin: 6px 0 0;
   color: #9aa4b2;
 }
@@ -116,53 +134,10 @@ main {
   font-size: 0.85rem;
 }
 
-.menu-grid {
+.game-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 18px;
-}
-
-.menu-button {
-  border-radius: 18px;
-  padding: 18px;
-  background: #111827;
-  border: 1px solid rgba(148, 163, 184, 0.15);
-  display: grid;
-  gap: 10px;
-  min-height: 168px;
-  cursor: pointer;
-  text-align: left;
-  transition: transform 0.2s ease, border 0.2s ease, box-shadow 0.2s ease;
-}
-
-.menu-button:hover {
-  transform: translateY(-2px);
-  border-color: rgba(148, 163, 184, 0.4);
-}
-
-.menu-button.selected {
-  border-color: rgba(74, 199, 245, 0.8);
-  box-shadow: 0 16px 30px rgba(74, 199, 245, 0.15);
-}
-
-.menu-button h3 {
-  margin: 0;
-  font-size: 1.1rem;
-}
-
-.menu-button p {
-  margin: 0;
-  color: #cbd5e1;
-  font-size: 0.92rem;
-}
-
-.menu-button .card-footer {
-  margin-top: auto;
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  color: #8aa3ff;
-  font-size: 0.8rem;
 }
 
 .game-card {
@@ -209,6 +184,54 @@ main {
 
 .panel {
   background: rgba(15, 22, 36, 0.9);
+header button {
+  padding: 10px 18px;
+  background: #2a6df4;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(42, 109, 244, 0.35);
+}
+
+main {
+  display: grid;
+  grid-template-columns: minmax(320px, 1fr) minmax(280px, 360px);
+  gap: 32px;
+  padding: 0 48px 32px;
+  flex: 1;
+}
+
+.canvas-shell {
+  position: relative;
+  background: #0f1522;
+  border-radius: 24px;
+  padding: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+}
+
+canvas {
+  width: 100%;
+  height: auto;
+  border-radius: 18px;
+  background: #0a0f1c;
+  display: block;
+}
+
+.canvas-help {
+  position: absolute;
+  bottom: 20px;
+  left: 32px;
+  background: rgba(20, 27, 42, 0.9);
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  color: #c7d2e3;
+}
+
+.details-panel {
+  background: rgba(15, 22, 36, 0.8);
   border-radius: 24px;
   padding: 24px;
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -216,6 +239,7 @@ main {
 }
 
 .panel h2 {
+.details-panel h2 {
   margin-top: 0;
   font-size: 1.4rem;
 }
@@ -228,6 +252,7 @@ main {
 
 .panel-content ul,
 .panel-content ol {
+.panel-content ul {
   padding-left: 18px;
   margin: 0;
 }
@@ -240,14 +265,6 @@ main {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 18px;
-}
-
-.config-actions {
-  display: flex;
-  gap: 12px;
-  margin-top: 18px;
-  justify-content: flex-end;
-  flex-wrap: wrap;
 }
 
 .form-card {
@@ -420,6 +437,10 @@ select {
 
 footer {
   padding: 12px 56px 24px;
+footer {
+  padding: 12px 56px 24px;
+footer {
+  padding: 12px 48px 24px;
   color: #7f8aa2;
   font-size: 0.9rem;
 }
@@ -445,5 +466,9 @@ footer {
 
   .workflow {
     grid-template-columns: 1fr;
+  }
+  header.app-header {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
