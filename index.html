@@ -12,6 +12,14 @@
       <div>
         <p class="eyebrow">Dartcounter-stijl</p>
         <h1>Dart App</h1>
+        <p>Van spelkeuze tot scoring met camera en semi-automatische bevestiging.</p>
+      </div>
+      <div class="header-actions">
+        <button id="navHome" type="button" class="secondary">Home</button>
+        <button id="navConfig" type="button" class="secondary" disabled>
+          Configuratie
+        </button>
+        <button id="navPlay" type="button" class="primary" disabled>
         <p>Startscherm, configuratie en spelopzet voor web/PWA.</p>
       </div>
       <div class="header-actions">
@@ -23,6 +31,7 @@
     </header>
 
     <main>
+      <section id="screenStart" class="screen">
       <section class="screen">
         <div class="screen-header">
           <div>
@@ -33,6 +42,182 @@
         </div>
 
         <div class="game-grid" id="gameGrid" role="list"></div>
+      </section>
+
+      <section id="screenConfig" class="screen hidden" aria-live="polite">
+        <div class="screen-header">
+          <div>
+            <h2 id="configTitle">Spelconfiguratie</h2>
+            <p>Stel de regels en spelopzet per game in.</p>
+          </div>
+          <button id="openCalibration" type="button" class="secondary">
+            Calibratie dartbord
+          </button>
+        </div>
+
+        <form id="configForm" class="form-grid">
+          <div class="form-card">
+            <h3>Algemeen</h3>
+            <label>
+              Spelmodus
+              <input type="text" id="configGameMode" readonly />
+            </label>
+            <label>
+              Aantal legs
+              <input type="number" id="configLegs" min="1" value="3" />
+            </label>
+            <label>
+              Win met 2 legs verschil
+              <select id="configWinByTwo">
+                <option value="true">Ja</option>
+                <option value="false">Nee</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="form-card">
+            <h3>501 regels</h3>
+            <label>
+              In
+              <select id="configInRule">
+                <option value="straight">Straight in</option>
+                <option value="double">Double in</option>
+              </select>
+            </label>
+            <label>
+              Out
+              <select id="configOutRule">
+                <option value="double">Double out</option>
+                <option value="master">Master out</option>
+              </select>
+            </label>
+            <label>
+              Dartbot niveau
+              <select id="configBotLevel">
+                <option value="off">Uit</option>
+                <option value="1">1 (20–25)</option>
+                <option value="2">2 (26–30)</option>
+                <option value="3">3 (31–35)</option>
+                <option value="4">4 (36–40)</option>
+                <option value="5">5 (41–45)</option>
+                <option value="6">6 (46–50)</option>
+                <option value="7">7 (51–55)</option>
+                <option value="8">8 (56–60)</option>
+                <option value="9">9 (61–65)</option>
+                <option value="10">10 (66–70)</option>
+                <option value="11">11 (71–75)</option>
+                <option value="12">12 (76–80)</option>
+                <option value="13">13 (81–85)</option>
+                <option value="14">14 (86–90)</option>
+                <option value="15">15 (91–95)</option>
+                <option value="16">16 (96–100)</option>
+                <option value="17">17 (101–105)</option>
+                <option value="18">18 (110+)</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="form-card">
+            <h3>Around the Clock</h3>
+            <label>
+              Volgorde
+              <select id="configClockOrder">
+                <option value="sequential">Sequentieel</option>
+                <option value="free">Vrijuit</option>
+              </select>
+            </label>
+            <label>
+              Bull finish
+              <select id="configClockBull">
+                <option value="false">Uit</option>
+                <option value="true">Aan</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="form-card">
+            <h3>Scoreherkenning</h3>
+            <label>
+              Camera scoreflow
+              <select id="configCameraFlow">
+                <option value="semi">Semi-automatisch</option>
+                <option value="manual">Handmatig</option>
+              </select>
+            </label>
+            <p class="helper">
+              Semi-automatisch = scorevoorstel + bevestiging door speler.
+            </p>
+          </div>
+        </form>
+      </section>
+
+      <section id="screenPlay" class="screen hidden" aria-live="polite">
+        <div class="screen-header">
+          <div>
+            <h2 id="playTitle">Spelscherm</h2>
+            <p>Voer scores in, bevestig de camera-detectie en volg de score.</p>
+          </div>
+          <div class="status-pill">Game engine actief</div>
+        </div>
+
+        <div class="play-grid">
+          <div class="scoreboard">
+            <div class="score-card">
+              <h3>Speler</h3>
+              <p id="playerScore">501</p>
+              <p class="muted">Legs: <span id="playerLegs">0</span></p>
+            </div>
+            <div class="score-card" id="botCard">
+              <h3>Dartbot</h3>
+              <p id="botScore">501</p>
+              <p class="muted">Legs: <span id="botLegs">0</span></p>
+            </div>
+          </div>
+
+          <div class="score-entry">
+            <div class="camera-preview">
+              <div>
+                <h4>Camera preview</h4>
+                <p>Gebruik calibratie om het bord te matchen met de camera.</p>
+              </div>
+              <video id="cameraFeed" autoplay muted playsinline></video>
+              <div class="camera-actions">
+                <button id="cameraStart" type="button" class="secondary">
+                  Camera aan
+                </button>
+                <button id="cameraStop" type="button" class="secondary" disabled>
+                  Camera uit
+                </button>
+                <button id="captureScore" type="button" class="primary">
+                  Score voorstel
+                </button>
+              </div>
+            </div>
+
+            <div class="score-confirm">
+              <h4>Score bevestigen</h4>
+              <div class="score-row">
+                <label>
+                  Voorstel
+                  <input type="number" id="suggestedScore" value="60" />
+                </label>
+                <label>
+                  Bevestigd
+                  <input type="number" id="confirmedScore" value="60" />
+                </label>
+              </div>
+              <div class="score-row">
+                <button id="confirmScore" type="button" class="primary">
+                  Bevestigen
+                </button>
+                <button id="undoScore" type="button" class="secondary">
+                  Ongedaan
+                </button>
+              </div>
+              <p class="helper" id="scoreStatus">Wacht op scorevoorstel.</p>
+            </div>
+          </div>
+        </div>
       </section>
 
       <aside class="panel" aria-live="polite">
@@ -53,6 +238,10 @@
         </ol>
       </div>
       <div class="workflow-card">
+        <h4>Calibratie</h4>
+        <p>
+          Leg het dartbord vast, stel het middelpunt en de straal in, en bewaar de
+          mapping voor de scoreherkenning.
         <h4>Volgende stap</h4>
         <p>
           Dit is de UI-basis voor optie A. Hierna bouwen we echte configuratieforms,
@@ -61,6 +250,40 @@
       </div>
     </section>
 
+    <div id="calibrationModal" class="modal hidden" role="dialog" aria-modal="true">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Calibratie dartbord</h3>
+          <button id="closeCalibration" type="button" class="secondary">Sluiten</button>
+        </div>
+        <div class="modal-body">
+          <p>
+            Stel de positie van het bord in t.o.v. de camera. Dit is een MVP; echte
+            puntdetectie volgt later.
+          </p>
+          <div class="calibration-grid">
+            <label>
+              Board center X
+              <input type="number" id="boardCenterX" value="320" />
+            </label>
+            <label>
+              Board center Y
+              <input type="number" id="boardCenterY" value="180" />
+            </label>
+            <label>
+              Board radius
+              <input type="number" id="boardRadius" value="160" />
+            </label>
+          </div>
+          <button id="saveCalibration" type="button" class="primary">
+            Calibratie opslaan
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p>Conceptversie — web/PWA implementatie in Dartcounter-stijl.</p>
     <footer>
       <p>Conceptversie — web/PWA implementatie in Dartcounter-stijl.</p>
         <h1>Dart App</h1>
